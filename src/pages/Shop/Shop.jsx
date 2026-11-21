@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
 import { useProducts } from "../../context/ProductContext.jsx";
 import { categories } from "../../data/products.js";
 
@@ -37,6 +38,8 @@ export default function Shop() {
   };
 
   return (
+    <div>
+    <Breadcrumb items={category === "All" ? [{ label: "Shop" }] : [{ label: "Shop", to: "/shop" }, { label: category }]} />
     <div className="grid gap-6 lg:grid-cols-4">
       <aside className="h-fit space-y-5 rounded-2xl border border-slate-200 bg-white p-5">
         <div>
@@ -91,6 +94,7 @@ export default function Shop() {
           </div>
         )}
       </section>
+    </div>
     </div>
   );
 }

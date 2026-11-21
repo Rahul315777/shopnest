@@ -4,6 +4,7 @@ import { FiMinus, FiPlus, FiStar } from "react-icons/fi";
 import { useProducts } from "../../context/ProductContext.jsx";
 import { useCart } from "../../context/CartContext.jsx";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
 import { sampleReviews } from "../../data/products.js";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 
@@ -43,11 +44,13 @@ export default function Product() {
 
   return (
     <div>
-      <p className="mb-4 text-sm text-slate-500">
-        <Link to="/" className="hover:text-indigo-600">Home</Link> /{" "}
-        <Link to={`/shop?category=${product.category}`} className="hover:text-indigo-600">{product.category}</Link> /{" "}
-        {product.name}
-      </p>
+      <Breadcrumb
+        items={[
+          { label: "Shop", to: "/shop" },
+          { label: product.category, to: `/shop?category=${product.category}` },
+          { label: product.name },
+        ]}
+      />
 
       <div className="grid gap-8 md:grid-cols-2">
         <div className="flex h-80 items-center justify-center rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 text-9xl">
