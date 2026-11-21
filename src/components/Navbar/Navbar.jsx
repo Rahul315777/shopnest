@@ -2,11 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiShoppingCart, FiUser, FiSearch, FiHeart } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
 import { useWishlist } from "../../context/WishlistContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import { useProducts } from "../../context/ProductContext.jsx";
 
 export default function Navbar() {
   const { count } = useCart();
   const { ids } = useWishlist();
+  const { user } = useAuth();
   const { search, setSearch } = useProducts();
   const navigate = useNavigate();
 
@@ -44,9 +46,13 @@ export default function Navbar() {
               </span>
             )}
           </Link>
-          <Link to="/profile" aria-label="Profile" className="hover:text-indigo-600">
-            <FiUser />
-          </Link>
+          {user ? (
+            <Link to="/profile" aria-label="Profile" title={user.name} className="hover:text-indigo-600">
+              <FiUser />
+            </Link>
+          ) : (
+            <Link to="/login" className="text-sm font-medium hover:text-indigo-600">Log in</Link>
+          )}
           <Link to="/cart" aria-label="Cart" className="relative hover:text-indigo-600">
             <FiShoppingCart />
             {count > 0 && (

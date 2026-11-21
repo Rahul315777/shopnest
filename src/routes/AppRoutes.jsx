@@ -9,6 +9,8 @@ import Login from "../pages/Login/Login.jsx";
 import Signup from "../pages/Signup/Signup.jsx";
 import Checkout from "../pages/Checkout/Checkout.jsx";
 import Orders from "../pages/Orders/Orders.jsx";
+import Profile from "../pages/Profile/Profile.jsx";
+import Admin from "../pages/Admin/Admin.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 export default function AppRoutes() {
@@ -24,6 +26,9 @@ export default function AppRoutes() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
+        <Route path="*" element={<p className="py-20 text-center text-slate-500">Page not found.</p>} />
       </Route>
     </Routes>
   );
