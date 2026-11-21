@@ -2,13 +2,25 @@ import { Link } from "react-router-dom";
 import { FiHeart, FiStar } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
 import { useWishlist } from "../../context/WishlistContext.jsx";
+import { useToast } from "../../context/ToastContext.jsx";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
   const { isWished, toggleWishlist } = useWishlist();
+  const { showToast } = useToast();
   const wished = isWished(product.id);
   const off = discountPercent(product.price, product.oldPrice);
+
+  const handleAdd = () => {
+    addToCart(product);
+    showToast(`${product.name} added to cart`);
+  };
+
+  const handleWish = () => {
+    toggleWishlist(product.id);
+    showToast(wished ? "Removed from wishlist" : "Added to wishlist ♥", wished ? "info" : "success");
+  };
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg">
@@ -24,7 +36,7 @@ export default function ProductCard({ product }) {
         )}
       </Link>
       <button
-        onClick={() => toggleWishlist(product.id)}
+        onClick={handleWish}
         aria-label="Toggle wishlist"
         className="absolute right-3 top-3 rounded-full bg-white p-2 shadow hover:scale-110"
       >
@@ -47,7 +59,7 @@ export default function ProductCard({ product }) {
           <span className="text-sm text-slate-400 line-through">{formatPrice(product.oldPrice)}</span>
         </div>
         <button
-          onClick={() => addToCart(product)}
+          onClick={handleAdd}
           className="mt-2 rounded-xl bg-indigo-600 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
         >
           Add to cart
