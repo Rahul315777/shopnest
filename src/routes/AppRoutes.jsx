@@ -7,6 +7,9 @@ import Shop from "../pages/Shop/Shop.jsx";
 import Wishlist from "../pages/Wishlist/Wishlist.jsx";
 import Login from "../pages/Login/Login.jsx";
 import Signup from "../pages/Signup/Signup.jsx";
+import Checkout from "../pages/Checkout/Checkout.jsx";
+import Orders from "../pages/Orders/Orders.jsx";
+import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 export default function AppRoutes() {
   return (
@@ -19,6 +22,8 @@ export default function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+        <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
       </Route>
     </Routes>
   );
