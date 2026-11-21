@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
-import { FiStar } from "react-icons/fi";
+import { FiHeart, FiStar } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
+import { useWishlist } from "../../context/WishlistContext.jsx";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
+  const { isWished, toggleWishlist } = useWishlist();
+  const wished = isWished(product.id);
   const off = discountPercent(product.price, product.oldPrice);
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg">
+    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg">
       <Link
         to={`/product/${product.id}`}
         className="relative flex h-44 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-7xl transition group-hover:scale-[1.02]"
@@ -20,6 +23,13 @@ export default function ProductCard({ product }) {
           </span>
         )}
       </Link>
+      <button
+        onClick={() => toggleWishlist(product.id)}
+        aria-label="Toggle wishlist"
+        className="absolute right-3 top-3 rounded-full bg-white p-2 shadow hover:scale-110"
+      >
+        <FiHeart className={wished ? "fill-rose-500 text-rose-500" : "text-slate-500"} />
+      </button>
 
       <div className="flex flex-1 flex-col gap-1 p-4">
         <span className="text-xs font-medium uppercase tracking-wide text-indigo-500">
