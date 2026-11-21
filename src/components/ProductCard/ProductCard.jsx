@@ -1,0 +1,48 @@
+import { Link } from "react-router-dom";
+import { FiStar } from "react-icons/fi";
+import { useCart } from "../../context/CartContext.jsx";
+import { discountPercent, formatPrice } from "../../utils/format.js";
+
+export default function ProductCard({ product }) {
+  const { addToCart } = useCart();
+  const off = discountPercent(product.price, product.oldPrice);
+
+  return (
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg">
+      <Link
+        to={`/product/${product.id}`}
+        className="relative flex h-44 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-7xl transition group-hover:scale-[1.02]"
+      >
+        <span>{product.emoji}</span>
+        {off > 0 && (
+          <span className="absolute left-3 top-3 rounded-full bg-rose-500 px-2 py-0.5 text-xs font-bold text-white">
+            {off}% OFF
+          </span>
+        )}
+      </Link>
+
+      <div className="flex flex-1 flex-col gap-1 p-4">
+        <span className="text-xs font-medium uppercase tracking-wide text-indigo-500">
+          {product.category}
+        </span>
+        <Link to={`/product/${product.id}`} className="line-clamp-2 font-semibold hover:text-indigo-600">
+          {product.name}
+        </Link>
+        <div className="flex items-center gap-1 text-sm text-amber-500">
+          <FiStar className="fill-current" /> {product.rating}
+          <span className="text-slate-400">({product.reviews})</span>
+        </div>
+        <div className="mt-auto flex items-baseline gap-2 pt-2">
+          <span className="text-lg font-bold">{formatPrice(product.price)}</span>
+          <span className="text-sm text-slate-400 line-through">{formatPrice(product.oldPrice)}</span>
+        </div>
+        <button
+          onClick={() => addToCart(product)}
+          className="mt-2 rounded-xl bg-indigo-600 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+        >
+          Add to cart
+        </button>
+      </div>
+    </div>
+  );
+}
