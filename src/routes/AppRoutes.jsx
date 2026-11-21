@@ -5,6 +5,8 @@ import Cart from "../pages/Cart/Cart.jsx";
 import Product from "../pages/Product/Product.jsx";
 import Shop from "../pages/Shop/Shop.jsx";
 import Wishlist from "../pages/Wishlist/Wishlist.jsx";
+import Login from "../pages/Login/Login.jsx";
+import Signup from "../pages/Signup/Signup.jsx";
 
 export default function AppRoutes() {
   return (
@@ -14,6 +16,8 @@ export default function AppRoutes() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/cart" element={<Cart />} />
       </Route>
     </Routes>
