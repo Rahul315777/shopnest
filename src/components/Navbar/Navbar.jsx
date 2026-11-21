@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FiShoppingCart, FiUser, FiSearch } from "react-icons/fi";
+import { FiShoppingCart, FiUser, FiSearch, FiHeart } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
+import { useWishlist } from "../../context/WishlistContext.jsx";
 import { useProducts } from "../../context/ProductContext.jsx";
 
 export default function Navbar() {
   const { count } = useCart();
+  const { ids } = useWishlist();
   const { search, setSearch } = useProducts();
   const navigate = useNavigate();
 
@@ -33,6 +35,14 @@ export default function Navbar() {
         <nav className="ml-auto flex items-center gap-5 text-xl text-slate-600">
           <Link to="/shop" className="hidden text-sm font-medium hover:text-indigo-600 sm:block">
             Shop
+          </Link>
+          <Link to="/wishlist" aria-label="Wishlist" className="relative hover:text-indigo-600">
+            <FiHeart />
+            {ids.length > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[11px] font-bold text-white">
+                {ids.length}
+              </span>
+            )}
           </Link>
           <Link to="/profile" aria-label="Profile" className="hover:text-indigo-600">
             <FiUser />
