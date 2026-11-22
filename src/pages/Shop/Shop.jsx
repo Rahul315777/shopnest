@@ -2,12 +2,15 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
+import ProductSkeleton from "../../components/ProductSkeleton/ProductSkeleton.jsx";
+import useSimulatedLoading from "../../hooks/useSimulatedLoading.js";
 import { useProducts } from "../../context/ProductContext.jsx";
 import { categories } from "../../data/products.js";
 
 export default function Shop() {
   const { products, search, setSearch } = useProducts();
   const [params, setParams] = useSearchParams();
+  const loading = useSimulatedLoading();
   const category = params.get("category") || "All";
   const [sort, setSort] = useState("featured");
   const [maxPrice, setMaxPrice] = useState(5000);
@@ -86,7 +89,11 @@ export default function Shop() {
             <option value="rating">Top rated</option>
           </select>
         </div>
-        {list.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            <ProductSkeleton count={6} />
+          </div>
+        ) : list.length === 0 ? (
           <p className="py-16 text-center text-slate-500">No products match your filters.</p>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
