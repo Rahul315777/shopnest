@@ -26,9 +26,9 @@ export default function ProductCard({ product }) {
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg">
       <Link
         to={`/product/${product.id}`}
-        className="relative flex h-44 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-7xl transition group-hover:scale-[1.02]"
+        className="relative flex h-44 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden text-7xl"
       >
-        <span>{product.emoji}</span>
+        <span className="transition-transform duration-300 group-hover:scale-125">{product.emoji}</span>
         {off > 0 && (
           <span className="absolute left-3 top-3 rounded-full bg-rose-500 px-2 py-0.5 text-xs font-bold text-white">
             {off}% OFF
