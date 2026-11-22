@@ -7,6 +7,8 @@ import FilterChips from "../../components/FilterChips/FilterChips.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
 import ProductSkeleton from "../../components/ProductSkeleton/ProductSkeleton.jsx";
 import { buildChips } from "../../utils/filterChips.js";
+import { allBrands, brandOf } from "../../utils/brand.js";
+import { stockOf } from "../../utils/stock.js";
 import useLocalStorage from "../../hooks/useLocalStorage.js";
 import useSimulatedLoading from "../../hooks/useSimulatedLoading.js";
 import { useProducts } from "../../context/ProductContext.jsx";
@@ -23,6 +25,12 @@ export default function Shop() {
   const [view, setView] = useLocalStorage("shopnest_shop_view", "grid");
   const [maxPrice, setMaxPrice] = useState(5000);
   const [minRating, setMinRating] = useState(0);
+  const [brands, setBrands] = useState([]);
+  const [inStock, setInStock] = useState(false);
+
+  const brandOptions = useMemo(() => allBrands(products), [products]);
+  const toggleBrand = (b) =>
+    setBrands((prev) => (prev.includes(b) ? prev.filter((x) => x !== b) : [...prev, b]));
 
   const setCategory = (c) => (c === "All" ? setParams({}) : setParams({ category: c }));
 
@@ -32,16 +40,18 @@ export default function Shop() {
         (category === "All" || p.category === category) &&
         p.price <= maxPrice &&
         p.rating >= minRating &&
+        (brands.length === 0 || brands.includes(brandOf(p))) &&
+        (!inStock || stockOf(p) > 0) &&
         p.name.toLowerCase().includes(search.trim().toLowerCase())
     );
     if (sort === "low") out = [...out].sort((a, b) => a.price - b.price);
     if (sort === "high") out = [...out].sort((a, b) => b.price - a.price);
     if (sort === "rating") out = [...out].sort((a, b) => b.rating - a.rating);
     return out;
-  }, [products, category, maxPrice, minRating, search, sort]);
+  }, [products, category, maxPrice, minRating, brands, inStock, search, sort]);
 
   // Go back to page 1 whenever the result set changes.
-  useEffect(() => setPage(1), [category, maxPrice, minRating, search, sort, perPage]);
+  useEffect(() => setPage(1), [category, maxPrice, minRating, brands, inStock, search, sort, perPage]);
 
   const totalPages = Math.max(1, Math.ceil(list.length / perPage));
   const current = Math.min(page, totalPages);
@@ -53,13 +63,15 @@ export default function Shop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const chips = buildChips({ category, search, maxPrice, minRating });
+  const chips = buildChips({ category, search, maxPrice, minRating, brands, inStock });
 
   const removeChip = (key) => {
     if (key === "category") setParams({});
     if (key === "search") setSearch("");
     if (key === "price") setMaxPrice(5000);
     if (key === "rating") setMinRating(0);
+    if (key === "stock") setInStock(false);
+    if (key.startsWith("brand:")) setBrands((prev) => prev.filter((b) => b !== key.slice(6)));
   };
 
   const reset = () => {
@@ -67,6 +79,8 @@ export default function Shop() {
     setSearch("");
     setMaxPrice(5000);
     setMinRating(0);
+    setBrands([]);
+    setInStock(false);
     setSort("featured");
   };
 
@@ -102,6 +116,22 @@ export default function Shop() {
             <option value={4}>4★ & up</option>
             <option value={4.5}>4.5★ & up</option>
           </select>
+        </div>
+        <div>
+          <h3 className="mb-2 font-semibold">Brand</h3>
+          {brandOptions.map((b) => (
+            <label key={b} className="mb-1 flex cursor-pointer items-center gap-2 text-sm">
+              <input type="checkbox" checked={brands.includes(b)} onChange={() => toggleBrand(b)} className="accent-indigo-600" />
+              {b}
+            </label>
+          ))}
+        </div>
+        <div>
+          <h3 className="mb-2 font-semibold">Availability</h3>
+          <label className="flex cursor-pointer items-center gap-2 text-sm">
+            <input type="checkbox" checked={inStock} onChange={(e) => setInStock(e.target.checked)} className="accent-indigo-600" />
+            In stock only
+          </label>
         </div>
         <button onClick={reset} className="text-sm text-indigo-600 hover:underline">Reset filters</button>
       </aside>
