@@ -35,3 +35,9 @@ export const sampleReviews = [
   { name: "Neha K.", rating: 4, text: "Exactly as described. Would happily buy again." },
   { name: "Rohan M.", rating: 4, text: "Good value. Packaging could be a bit better." },
 ];
+
+// Starting stock per product id. Products added later (e.g. from admin) carry their own `stock`.
+export const seedStock = {
+  1: 12, 2: 5, 3: 30, 4: 40, 5: 3, 6: 18, 7: 25, 8: 0,
+  9: 14, 10: 2, 11: 20, 12: 6, 13: 9, 14: 50, 15: 15, 16: 8,
+};
