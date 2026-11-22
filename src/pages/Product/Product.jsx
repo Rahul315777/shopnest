@@ -5,6 +5,7 @@ import { useProducts } from "../../context/ProductContext.jsx";
 import { useCart } from "../../context/CartContext.jsx";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
+import ZoomImage from "../../components/ZoomImage/ZoomImage.jsx";
 import { sampleReviews } from "../../data/products.js";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 
@@ -53,9 +54,9 @@ export default function Product() {
       />
 
       <div className="grid gap-8 md:grid-cols-2">
-        <div className="flex h-80 items-center justify-center rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 text-9xl">
+        <ZoomImage className="h-80 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 text-9xl">
           {product.emoji}
-        </div>
+        </ZoomImage>
 
         <div>
           <span className="text-xs font-semibold uppercase tracking-wide text-indigo-500">{product.category}</span>
