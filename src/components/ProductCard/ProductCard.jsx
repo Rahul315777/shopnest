@@ -8,13 +8,15 @@ import Badges from "../Badges/Badges.jsx";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 import { stockLabel, stockOf } from "../../utils/stock.js";
 
-export default function ProductCard({ product }) {
+// view: "grid" (default) or "list" (horizontal layout used on the shop page)
+export default function ProductCard({ product, view = "grid" }) {
   const { addToCart } = useCart();
   const { isWished, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
   const { badges } = useProducts();
   const wished = isWished(product.id);
   const off = discountPercent(product.price, product.oldPrice);
+  const isList = view === "list";
   const soldOut = stockOf(product) <= 0;
   const stock = stockLabel(product);
 
@@ -29,10 +31,12 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg">
+    <div className={`group relative flex overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-lg ${isList ? "flex-row" : "flex-col"}`}>
       <Link
         to={`/product/${product.id}`}
-        className="relative flex h-44 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden text-7xl"
+        className={`relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 ${
+          isList ? "min-h-40 w-36 shrink-0 text-6xl sm:w-52" : "h-44 text-7xl"
+        }`}
       >
         <span className="transition-transform duration-300 group-hover:scale-125">{product.emoji}</span>
         <Badges tags={badges[product.id]} className="absolute bottom-2 left-2 z-10" />
@@ -62,6 +66,9 @@ export default function ProductCard({ product }) {
         <Link to={`/product/${product.id}`} className="line-clamp-2 font-semibold hover:text-indigo-600">
           {product.name}
         </Link>
+        {isList && (
+          <p className="line-clamp-2 hidden text-sm text-slate-500 sm:block">{product.description}</p>
+        )}
         <div className="flex items-center gap-1 text-sm text-amber-500">
           <FiStar className="fill-current" /> {product.rating}
           <span className="text-slate-400">({product.reviews})</span>
@@ -74,7 +81,7 @@ export default function ProductCard({ product }) {
         <button
           onClick={handleAdd}
           disabled={soldOut}
-          className="mt-2 rounded-xl bg-indigo-600 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:hover:bg-slate-300"
+          className={`mt-2 rounded-xl bg-indigo-600 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:hover:bg-slate-300 ${isList ? "sm:w-44" : ""}`}
         >
           {soldOut ? "Unavailable" : "Add to cart"}
         </button>
