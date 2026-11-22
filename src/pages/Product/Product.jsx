@@ -4,6 +4,7 @@ import { FiMinus, FiPlus, FiStar } from "react-icons/fi";
 import { useProducts } from "../../context/ProductContext.jsx";
 import { useCart } from "../../context/CartContext.jsx";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
+import Badges from "../../components/Badges/Badges.jsx";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
 import ZoomImage from "../../components/ZoomImage/ZoomImage.jsx";
 import { sampleReviews } from "../../data/products.js";
@@ -13,7 +14,7 @@ import { stockLabel, stockOf } from "../../utils/stock.js";
 export default function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products, getProduct } = useProducts();
+  const { products, badges, getProduct } = useProducts();
   const { addToCart } = useCart();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
@@ -66,6 +67,7 @@ export default function Product() {
         <div>
           <span className="text-xs font-semibold uppercase tracking-wide text-indigo-500">{product.category}</span>
           <h1 className="mt-1 text-3xl font-bold">{product.name}</h1>
+          <Badges tags={badges[product.id]} max={3} className="mt-2" />
           <div className="mt-2 flex items-center gap-1 text-amber-500">
             <FiStar className="fill-current" /> {product.rating}
             <span className="text-sm text-slate-400">({product.reviews} reviews)</span>
