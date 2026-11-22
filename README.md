@@ -4,7 +4,8 @@ A responsive e-commerce front end built with **React 19, Vite, Tailwind CSS 4, R
 
 ## Features
 - Home with hero, category cards and featured products
-- Shop page with search, category, price and rating filters, plus sorting
+- Shop page with search, category, price and rating filters, sorting, grid/list view and pagination
+- Removable active-filter chips with a clear-all button
 - Product details: quantity selector, add to cart, buy now, reviews, related products
 - Cart with quantity controls and live totals (persisted in localStorage)
 - Wishlist with navbar counter
