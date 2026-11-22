@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiGrid, FiList } from "react-icons/fi";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
+import Pagination from "../../components/Pagination/Pagination.jsx";
 import ProductSkeleton from "../../components/ProductSkeleton/ProductSkeleton.jsx";
 import useLocalStorage from "../../hooks/useLocalStorage.js";
 import useSimulatedLoading from "../../hooks/useSimulatedLoading.js";
@@ -15,6 +16,8 @@ export default function Shop() {
   const loading = useSimulatedLoading();
   const category = params.get("category") || "All";
   const [sort, setSort] = useState("featured");
+  const [perPage, setPerPage] = useLocalStorage("shopnest_per_page", 9);
+  const [page, setPage] = useState(1);
   const [view, setView] = useLocalStorage("shopnest_shop_view", "grid");
   const [maxPrice, setMaxPrice] = useState(5000);
   const [minRating, setMinRating] = useState(0);
@@ -34,6 +37,19 @@ export default function Shop() {
     if (sort === "rating") out = [...out].sort((a, b) => b.rating - a.rating);
     return out;
   }, [products, category, maxPrice, minRating, search, sort]);
+
+  // Go back to page 1 whenever the result set changes.
+  useEffect(() => setPage(1), [category, maxPrice, minRating, search, sort, perPage]);
+
+  const totalPages = Math.max(1, Math.ceil(list.length / perPage));
+  const current = Math.min(page, totalPages);
+  const start = (current - 1) * perPage;
+  const pageItems = list.slice(start, start + perPage);
+
+  const goToPage = (n) => {
+    setPage(n);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const reset = () => {
     setParams({});
@@ -81,7 +97,11 @@ export default function Shop() {
 
       <section className="lg:col-span-3">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-slate-500">{list.length} products</p>
+          <p className="text-sm text-slate-500">
+            {list.length === 0
+              ? "0 products"
+              : `Showing ${start + 1}–${start + pageItems.length} of ${list.length} products`}
+          </p>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..."
             className="rounded-full border border-slate-300 px-4 py-2 text-sm md:hidden" />
           <div className="flex overflow-hidden rounded-lg border border-slate-300">
@@ -97,6 +117,10 @@ export default function Shop() {
               </button>
             ))}
           </div>
+          <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))}
+            aria-label="Products per page" className="rounded-lg border border-slate-300 p-2 text-sm">
+            {[6, 9, 12, 24].map((n) => <option key={n} value={n}>{n} per page</option>)}
+          </select>
           <select value={sort} onChange={(e) => setSort(e.target.value)}
             className="rounded-lg border border-slate-300 p-2 text-sm">
             <option value="featured">Featured</option>
@@ -113,9 +137,10 @@ export default function Shop() {
           <p className="py-16 text-center text-slate-500">No products match your filters.</p>
         ) : (
           <div className={view === "list" ? "grid grid-cols-1 gap-4" : "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"}>
-            {list.map((p) => <ProductCard key={p.id} product={p} view={view} />)}
+            {pageItems.map((p) => <ProductCard key={p.id} product={p} view={view} />)}
           </div>
         )}
+        {!loading && <Pagination page={current} totalPages={totalPages} onChange={goToPage} />}
       </section>
     </div>
     </div>
