@@ -4,8 +4,9 @@ import { useOrders } from "../../context/OrderContext.jsx";
 import { categories } from "../../data/products.js";
 import { statusColor } from "../Orders/Orders.jsx";
 import { formatPrice } from "../../utils/format.js";
+import { stockOf } from "../../utils/stock.js";
 
-const empty = { name: "", category: "Electronics", price: "", oldPrice: "", emoji: "📦", description: "" };
+const empty = { name: "", category: "Electronics", price: "", oldPrice: "", stock: "20", emoji: "📦", description: "" };
 
 export default function Admin() {
   const { products, addProduct, deleteProduct } = useProducts();
@@ -17,7 +18,7 @@ export default function Admin() {
   const submit = (e) => {
     e.preventDefault();
     const price = Number(form.price);
-    addProduct({ ...form, price, oldPrice: Number(form.oldPrice) || price });
+    addProduct({ ...form, price, oldPrice: Number(form.oldPrice) || price, stock: Math.max(0, Number(form.stock) || 0) });
     setForm(empty);
   };
 
@@ -43,6 +44,7 @@ export default function Admin() {
           <select value={form.category} onChange={set("category")} className={field}>
             {categories.map((c) => <option key={c.name}>{c.name}</option>)}
           </select>
+          <input required type="number" min="0" placeholder="Stock" value={form.stock} onChange={set("stock")} className={field} />
           <input placeholder="Emoji" value={form.emoji} onChange={set("emoji")} className={field} />
           <input required type="number" min="1" placeholder="Price" value={form.price} onChange={set("price")} className={field} />
           <input type="number" min="1" placeholder="Old price" value={form.oldPrice} onChange={set("oldPrice")} className={field} />
@@ -56,7 +58,7 @@ export default function Admin() {
         <div className="divide-y">
           {products.map((p) => (
             <div key={p.id} className="flex items-center justify-between py-2 text-sm">
-              <span>{p.emoji} {p.name} — {formatPrice(p.price)}</span>
+              <span>{p.emoji} {p.name} — {formatPrice(p.price)} · stock {stockOf(p)}</span>
               <button onClick={() => deleteProduct(p.id)} className="text-rose-500 hover:underline">Delete</button>
             </div>
           ))}
