@@ -13,6 +13,10 @@ import Profile from "../pages/Profile/Profile.jsx";
 import Admin from "../pages/Admin/Admin.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import NotFound from "../pages/NotFound/NotFound.jsx";
+import About from "../pages/About/About.jsx";
+import Contact from "../pages/Contact/Contact.jsx";
+import FAQ from "../pages/FAQ/FAQ.jsx";
+import Policy from "../pages/Policy/Policy.jsx";
 
 export default function AppRoutes() {
   return (
@@ -29,6 +33,13 @@ export default function AppRoutes() {
         <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/privacy" element={<Policy slug="privacy" />} />
+        <Route path="/terms" element={<Policy slug="terms" />} />
+        <Route path="/shipping" element={<Policy slug="shipping" />} />
+        <Route path="/returns" element={<Policy slug="returns" />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
