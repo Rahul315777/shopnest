@@ -4,6 +4,7 @@ import { useCart } from "../../context/CartContext.jsx";
 import { useWishlist } from "../../context/WishlistContext.jsx";
 import { useToast } from "../../context/ToastContext.jsx";
 import { discountPercent, formatPrice } from "../../utils/format.js";
+import { stockLabel, stockOf } from "../../utils/stock.js";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
@@ -11,6 +12,8 @@ export default function ProductCard({ product }) {
   const { showToast } = useToast();
   const wished = isWished(product.id);
   const off = discountPercent(product.price, product.oldPrice);
+  const soldOut = stockOf(product) <= 0;
+  const stock = stockLabel(product);
 
   const handleAdd = () => {
     addToCart(product);
@@ -29,7 +32,12 @@ export default function ProductCard({ product }) {
         className="relative flex h-44 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden text-7xl"
       >
         <span className="transition-transform duration-300 group-hover:scale-125">{product.emoji}</span>
-        {off > 0 && (
+        {soldOut && (
+          <span className="absolute inset-0 flex items-center justify-center bg-slate-900/50 text-sm font-bold uppercase tracking-wide text-white">
+            Out of stock
+          </span>
+        )}
+        {off > 0 && !soldOut && (
           <span className="absolute left-3 top-3 rounded-full bg-rose-500 px-2 py-0.5 text-xs font-bold text-white">
             {off}% OFF
           </span>
@@ -54,15 +62,17 @@ export default function ProductCard({ product }) {
           <FiStar className="fill-current" /> {product.rating}
           <span className="text-slate-400">({product.reviews})</span>
         </div>
+        <p className={`text-xs font-medium ${stock.tone}`}>{stock.text}</p>
         <div className="mt-auto flex items-baseline gap-2 pt-2">
           <span className="text-lg font-bold">{formatPrice(product.price)}</span>
           <span className="text-sm text-slate-400 line-through">{formatPrice(product.oldPrice)}</span>
         </div>
         <button
           onClick={handleAdd}
-          className="mt-2 rounded-xl bg-indigo-600 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
+          disabled={soldOut}
+          className="mt-2 rounded-xl bg-indigo-600 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:hover:bg-slate-300"
         >
-          Add to cart
+          {soldOut ? "Unavailable" : "Add to cart"}
         </button>
       </div>
     </div>
