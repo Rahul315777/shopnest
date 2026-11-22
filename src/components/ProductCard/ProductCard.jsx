@@ -3,6 +3,8 @@ import { FiHeart, FiStar } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
 import { useWishlist } from "../../context/WishlistContext.jsx";
 import { useToast } from "../../context/ToastContext.jsx";
+import { useProducts } from "../../context/ProductContext.jsx";
+import Badges from "../Badges/Badges.jsx";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 import { stockLabel, stockOf } from "../../utils/stock.js";
 
@@ -10,6 +12,7 @@ export default function ProductCard({ product }) {
   const { addToCart } = useCart();
   const { isWished, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
+  const { badges } = useProducts();
   const wished = isWished(product.id);
   const off = discountPercent(product.price, product.oldPrice);
   const soldOut = stockOf(product) <= 0;
@@ -32,6 +35,7 @@ export default function ProductCard({ product }) {
         className="relative flex h-44 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden text-7xl"
       >
         <span className="transition-transform duration-300 group-hover:scale-125">{product.emoji}</span>
+        <Badges tags={badges[product.id]} className="absolute bottom-2 left-2 z-10" />
         {soldOut && (
           <span className="absolute inset-0 flex items-center justify-center bg-slate-900/50 text-sm font-bold uppercase tracking-wide text-white">
             Out of stock
