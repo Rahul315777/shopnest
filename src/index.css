@@ -3,3 +3,30 @@
 body {
   @apply bg-slate-50 text-slate-800 antialiased;
 }
+
+/* ---- Dark theme ----
+   Remaps the slate palette when <html class="dark">, so existing
+   components switch theme without editing every className. */
+html.dark {
+  --color-slate-50: #0b1120;
+  --color-slate-100: #1e293b;
+  --color-slate-200: #334155;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #a3b1c6;
+  --color-slate-600: #cbd5e1;
+  --color-slate-700: #e2e8f0;
+  --color-slate-800: #f1f5f9;
+  color-scheme: dark;
+}
+html.dark .bg-white {
+  background-color: #111a2e;
+}
+html.dark .bg-white\/90 {
+  background-color: rgb(17 26 46 / 0.9);
+}
+html.dark .border-slate-300 {
+  border-color: #475569;
+}
+html.dark input::placeholder {
+  color: #64748b;
+}

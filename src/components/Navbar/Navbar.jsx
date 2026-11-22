@@ -1,14 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FiShoppingCart, FiUser, FiSearch, FiHeart } from "react-icons/fi";
+import { FiShoppingCart, FiUser, FiSearch, FiHeart, FiMoon, FiSun } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
 import { useWishlist } from "../../context/WishlistContext.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useTheme } from "../../context/ThemeContext.jsx";
 import { useProducts } from "../../context/ProductContext.jsx";
 
 export default function Navbar() {
   const { count } = useCart();
   const { ids } = useWishlist();
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const { search, setSearch } = useProducts();
   const navigate = useNavigate();
 
@@ -38,6 +40,9 @@ export default function Navbar() {
           <Link to="/shop" className="hidden text-sm font-medium hover:text-indigo-600 sm:block">
             Shop
           </Link>
+          <button onClick={toggleTheme} aria-label="Toggle theme" className="hover:text-indigo-600">
+            {theme === "dark" ? <FiSun /> : <FiMoon />}
+          </button>
           <Link to="/wishlist" aria-label="Wishlist" className="relative hover:text-indigo-600">
             <FiHeart />
             {ids.length > 0 && (
