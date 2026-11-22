@@ -8,6 +8,7 @@ import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
 import ZoomImage from "../../components/ZoomImage/ZoomImage.jsx";
 import { sampleReviews } from "../../data/products.js";
 import { discountPercent, formatPrice } from "../../utils/format.js";
+import { stockLabel, stockOf } from "../../utils/stock.js";
 
 export default function Product() {
   const { id } = useParams();
@@ -27,6 +28,10 @@ export default function Product() {
       </div>
     );
   }
+
+  const stockCount = stockOf(product);
+  const soldOut = stockCount <= 0;
+  const stock = stockLabel(product);
 
   const related = products
     .filter((p) => p.category === product.category && p.id !== product.id)
@@ -70,19 +75,20 @@ export default function Product() {
             <span className="text-slate-400 line-through">{formatPrice(product.oldPrice)}</span>
             <span className="font-semibold text-emerald-600">{discountPercent(product.price, product.oldPrice)}% off</span>
           </div>
-          <p className="mt-4 text-slate-600">{product.description}</p>
+          <p className={`mt-3 text-sm font-semibold ${stock.tone}`}>{stock.text}</p>
+          <p className="mt-3 text-slate-600">{product.description}</p>
 
           <div className="mt-6 inline-flex items-center rounded-full border border-slate-300">
             <button onClick={() => setQty((q) => Math.max(1, q - 1))} className="p-3" aria-label="Decrease"><FiMinus /></button>
             <span className="w-10 text-center font-semibold">{qty}</span>
-            <button onClick={() => setQty((q) => q + 1)} className="p-3" aria-label="Increase"><FiPlus /></button>
+            <button onClick={() => setQty((q) => Math.min(stockCount, q + 1))} className="p-3" aria-label="Increase"><FiPlus /></button>
           </div>
 
           <div className="mt-5 flex gap-3">
-            <button onClick={handleAdd} className="flex-1 rounded-xl border-2 border-indigo-600 py-3 font-semibold text-indigo-600 hover:bg-indigo-50">
+            <button onClick={handleAdd} disabled={soldOut} className="flex-1 rounded-xl border-2 border-indigo-600 py-3 font-semibold text-indigo-600 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400 disabled:hover:bg-transparent">
               {added ? "Added ✓" : "Add to cart"}
             </button>
-            <button onClick={buyNow} className="flex-1 rounded-xl bg-indigo-600 py-3 font-semibold text-white hover:bg-indigo-700">
+            <button onClick={buyNow} disabled={soldOut} className="flex-1 rounded-xl bg-indigo-600 py-3 font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:hover:bg-slate-300">
               Buy now
             </button>
           </div>
