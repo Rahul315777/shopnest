@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { FiGrid, FiList } from "react-icons/fi";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
 import ProductSkeleton from "../../components/ProductSkeleton/ProductSkeleton.jsx";
+import useLocalStorage from "../../hooks/useLocalStorage.js";
 import useSimulatedLoading from "../../hooks/useSimulatedLoading.js";
 import { useProducts } from "../../context/ProductContext.jsx";
 import { categories } from "../../data/products.js";
@@ -13,6 +15,7 @@ export default function Shop() {
   const loading = useSimulatedLoading();
   const category = params.get("category") || "All";
   const [sort, setSort] = useState("featured");
+  const [view, setView] = useLocalStorage("shopnest_shop_view", "grid");
   const [maxPrice, setMaxPrice] = useState(5000);
   const [minRating, setMinRating] = useState(0);
 
@@ -81,6 +84,19 @@ export default function Shop() {
           <p className="text-sm text-slate-500">{list.length} products</p>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..."
             className="rounded-full border border-slate-300 px-4 py-2 text-sm md:hidden" />
+          <div className="flex overflow-hidden rounded-lg border border-slate-300">
+            {[["grid", FiGrid], ["list", FiList]].map(([v, Icon]) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                aria-label={`${v} view`}
+                aria-pressed={view === v}
+                className={`p-2 ${view === v ? "bg-indigo-600 text-white" : "hover:bg-slate-100"}`}
+              >
+                <Icon />
+              </button>
+            ))}
+          </div>
           <select value={sort} onChange={(e) => setSort(e.target.value)}
             className="rounded-lg border border-slate-300 p-2 text-sm">
             <option value="featured">Featured</option>
@@ -96,8 +112,8 @@ export default function Shop() {
         ) : list.length === 0 ? (
           <p className="py-16 text-center text-slate-500">No products match your filters.</p>
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {list.map((p) => <ProductCard key={p.id} product={p} />)}
+          <div className={view === "list" ? "grid grid-cols-1 gap-4" : "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"}>
+            {list.map((p) => <ProductCard key={p.id} product={p} view={view} />)}
           </div>
         )}
       </section>
