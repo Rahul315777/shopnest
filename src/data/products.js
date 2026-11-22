@@ -41,3 +41,11 @@ export const seedStock = {
   1: 12, 2: 5, 3: 30, 4: 40, 5: 3, 6: 18, 7: 25, 8: 0,
   9: 14, 10: 2, 11: 20, 12: 6, 13: 9, 14: 50, 15: 15, 16: 8,
 };
+
+// Brand per product id. Products added later (e.g. from admin) carry their own `brand`.
+export const seedBrand = {
+  1: "SoundPeak", 2: "FitPulse", 3: "VoltMax", 4: "UrbanThread",
+  5: "UrbanThread", 6: "StrideX", 7: "HomeCraft", 8: "HomeCraft",
+  9: "LumiHome", 10: "GlowLab", 11: "GlowLab", 12: "WillowPro",
+  13: "FitPulse", 14: "HydraGo", 15: "Bookworm Press", 16: "Bookworm Press",
+};
