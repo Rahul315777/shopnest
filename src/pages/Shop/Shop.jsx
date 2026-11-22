@@ -3,8 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { FiGrid, FiList } from "react-icons/fi";
 import ProductCard from "../../components/ProductCard/ProductCard.jsx";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
+import FilterChips from "../../components/FilterChips/FilterChips.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
 import ProductSkeleton from "../../components/ProductSkeleton/ProductSkeleton.jsx";
+import { buildChips } from "../../utils/filterChips.js";
 import useLocalStorage from "../../hooks/useLocalStorage.js";
 import useSimulatedLoading from "../../hooks/useSimulatedLoading.js";
 import { useProducts } from "../../context/ProductContext.jsx";
@@ -49,6 +51,15 @@ export default function Shop() {
   const goToPage = (n) => {
     setPage(n);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const chips = buildChips({ category, search, maxPrice, minRating });
+
+  const removeChip = (key) => {
+    if (key === "category") setParams({});
+    if (key === "search") setSearch("");
+    if (key === "price") setMaxPrice(5000);
+    if (key === "rating") setMinRating(0);
   };
 
   const reset = () => {
@@ -129,6 +140,7 @@ export default function Shop() {
             <option value="rating">Top rated</option>
           </select>
         </div>
+        <FilterChips chips={chips} onRemove={removeChip} onClear={reset} />
         {loading ? (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             <ProductSkeleton count={6} />
