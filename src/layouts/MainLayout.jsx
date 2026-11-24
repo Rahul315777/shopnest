@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar.jsx";
 import Footer from "../components/Footer/Footer.jsx";
 import BackToTop from "../components/BackToTop/BackToTop.jsx";
+import CompareBar from "../components/CompareBar/CompareBar.jsx";
 
 export default function MainLayout() {
   return (
@@ -12,6 +13,7 @@ export default function MainLayout() {
       </main>
       <Footer />
       <BackToTop />
+      <CompareBar />
     </div>
   );
 }
