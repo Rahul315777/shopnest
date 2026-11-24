@@ -22,3 +22,5 @@ npm run dev
 Demo admin login: `admin@shopnest.com` / `admin123`
 
 > Auth and data are stored in the browser for demo purposes. Swap the contexts for a real API when you add a backend.
+
+- Updates 17 to 21 synced (search suggestions, recent searches, stock limits, free delivery bar, and coupons).
