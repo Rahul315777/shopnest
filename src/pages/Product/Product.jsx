@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiMinus, FiPlus, FiStar } from "react-icons/fi";
 import { useProducts } from "../../context/ProductContext.jsx";
@@ -8,6 +8,8 @@ import ProductCard from "../../components/ProductCard/ProductCard.jsx";
 import Badges from "../../components/Badges/Badges.jsx";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
 import ZoomImage from "../../components/ZoomImage/ZoomImage.jsx";
+import RecentlyViewed from "../../components/RecentlyViewed/RecentlyViewed.jsx";
+import useRecentlyViewed from "../../hooks/useRecentlyViewed.js";
 import { sampleReviews } from "../../data/products.js";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 import { stockLabel, stockOf } from "../../utils/stock.js";
@@ -22,6 +24,13 @@ export default function Product() {
   const [added, setAdded] = useState(false);
 
   const product = getProduct(id);
+  const { track } = useRecentlyViewed();
+
+  // Remember this product, and start the quantity back at 1 for each product.
+  useEffect(() => {
+    if (product) track(product.id);
+    setQty(1);
+  }, [id]);
 
   if (!product) {
     return (
@@ -124,6 +133,8 @@ export default function Product() {
           </div>
         </section>
       )}
+
+      <RecentlyViewed excludeId={product.id} />
     </div>
   );
 }
