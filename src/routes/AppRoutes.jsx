@@ -13,6 +13,7 @@ import Profile from "../pages/Profile/Profile.jsx";
 import Admin from "../pages/Admin/Admin.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import NotFound from "../pages/NotFound/NotFound.jsx";
+import Compare from "../pages/Compare/Compare.jsx";
 import About from "../pages/About/About.jsx";
 import Contact from "../pages/Contact/Contact.jsx";
 import FAQ from "../pages/FAQ/FAQ.jsx";
@@ -33,6 +34,7 @@ export default function AppRoutes() {
         <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
+        <Route path="/compare" element={<Compare />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/faq" element={<FAQ />} />
