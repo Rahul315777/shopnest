@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiHeart, FiStar } from "react-icons/fi";
+import { FiEye, FiHeart, FiStar } from "react-icons/fi";
 import { useCart } from "../../context/CartContext.jsx";
 import { useWishlist } from "../../context/WishlistContext.jsx";
 import { useToast } from "../../context/ToastContext.jsx";
 import { useProducts } from "../../context/ProductContext.jsx";
+import { useCompare } from "../../context/CompareContext.jsx";
 import Badges from "../Badges/Badges.jsx";
+import QuickView from "../QuickView/QuickView.jsx";
 import { discountPercent, formatPrice } from "../../utils/format.js";
 import { stockLabel, stockOf } from "../../utils/stock.js";
 
@@ -14,6 +17,9 @@ export default function ProductCard({ product, view = "grid" }) {
   const { isWished, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
   const { badges } = useProducts();
+  const { has, toggle } = useCompare();
+  const [quick, setQuick] = useState(false);
+  const compared = has(product.id);
   const wished = isWished(product.id);
   const off = discountPercent(product.price, product.oldPrice);
   const isList = view === "list";
@@ -24,6 +30,11 @@ export default function ProductCard({ product, view = "grid" }) {
     const r = addToCart(product);
     if (r.added === 0) showToast(`Only ${r.max} available. You already have them in your cart.`, "error");
     else showToast(`${product.name} added to cart`);
+  };
+
+  const handleCompare = () => {
+    const r = toggle(product.id);
+    if (!r.ok) showToast(r.error, "error");
   };
 
   const handleWish = () => {
@@ -60,6 +71,14 @@ export default function ProductCard({ product, view = "grid" }) {
         <FiHeart className={wished ? "fill-rose-500 text-rose-500" : "text-slate-500"} />
       </button>
 
+      <button
+        onClick={() => setQuick(true)}
+        aria-label="Quick view"
+        className="absolute right-3 top-14 rounded-full bg-white p-2 shadow transition hover:scale-110 sm:opacity-0 sm:group-hover:opacity-100"
+      >
+        <FiEye className="text-slate-500" />
+      </button>
+
       <div className="flex flex-1 flex-col gap-1 p-4">
         <span className="text-xs font-medium uppercase tracking-wide text-indigo-500">
           {product.category}
@@ -86,6 +105,11 @@ export default function ProductCard({ product, view = "grid" }) {
         >
           {soldOut ? "Unavailable" : "Add to cart"}
         </button>
+        <label className="mt-1 flex cursor-pointer items-center gap-2 text-xs text-slate-500">
+          <input type="checkbox" checked={compared} onChange={handleCompare} className="accent-indigo-600" />
+          Compare
+        </label>
+        {quick && <QuickView product={product} onClose={() => setQuick(false)} />}
       </div>
     </div>
   );
